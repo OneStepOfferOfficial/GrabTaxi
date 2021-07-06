@@ -1,7 +1,10 @@
 from flask import Flask,make_response,url_for,request,render_template,session,redirect
 import controler as controler
 
+
 app = Flask(__name__)
+app.config.from_pyfile('config.py')
+
 @app.route('/',methods=['GET','POST'])
 def index():
     user_logged_in,username = controler.check_user_status()
@@ -34,13 +37,10 @@ def booking():
             trip_id = controler.create_trip()
             return render_template('show_booking_result.html',trip_id=trip_id,success=success)
 
-
 @app.route('/clear_session')
 def clear_session():
     session.clear()
     return redirect(url_for('index'))
-
-app.secret_key = "1"
 
 if __name__ == '__main__':
    app.run(port=5002, debug=True)
