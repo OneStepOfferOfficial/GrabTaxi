@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+<body>
+<div id="datetime">
+    <script>
+        setInterval("document.getElementById('datetime').innerHTML=new Date().toLocaleString();", 1000);
+    </script>
+</div>
+<form method="POST">	
+                <h2>Hi! Please make your trip <h>
+<br></br>
+	<p>longitude of pick-up position:<input type="text" name="long_of_pickup"></p>
+                <p>latitude of pick-up position:    <input type="text" name="lati_of_pickup"></p>
+	<p>longitude of drop-off position:<input type="text" name="long_of_dropoff"></p>
+                <p>latitude of drop-off position:    <input type="text" name="lati_of_dropoff"></p>
+                <p><input type="submit" value="Confirm"></p>
+</form>
+</body>
+</html>

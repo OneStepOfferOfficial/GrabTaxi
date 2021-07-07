@@ -32,10 +32,15 @@ def booking():
         return redirect(url_for('login'))
     else:
         if request.method == 'GET':
-            return render_template('booking.html')
+            trip_id = request.cookies.get("trip_id", None)
+            if trip_id == None:
+                return render_template('booking.html')
+            return render_template('show_booking_result.html',trip_id=trip_id)
         else:
             trip_id = controler.create_trip()
-            return render_template('show_booking_result.html',trip_id=trip_id,success=success)
+            resp = make_response(render_template('show_booking_result.html',trip_id=trip_id))
+            resp.set_cookie('trip_id', trip_id)
+            return resp
 
 @app.route('/clear_session')
 def clear_session():
