@@ -1,6 +1,6 @@
 from flask import Flask,make_response,url_for,request,render_template,session,redirect
 import uuid
-import model
+
 
 def check_user_status():
     try:
@@ -24,5 +24,5 @@ def create_trip():
     location_pickup = [request.form['lati_of_pickup'],request.form['long_of_pickup']]
     location_dropoff = [request.form['lati_of_dropoff'],request.form['long_of_dropoff']]
     user_name = request.cookies.get("username", None)
-    model.create_trip(trip_id,location_pickup,location_dropoff,user_name)
+    # model.create_trip(trip_id,location_pickup,location_dropoff,user_name)
     return trip_id
