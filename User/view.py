@@ -1,5 +1,5 @@
 from flask import Flask,make_response,url_for,request,render_template,session,redirect
-import controler as controler
+from User import controler as controler
 import time
 
 
@@ -38,7 +38,6 @@ def booking():
                 return render_template('booking.html')
             return render_template('show_booking_result.html',trip_id=trip_id)
         else:
-            print(1)
             trip_id = controler.create_trip()
             resp = make_response(render_template('show_booking_result.html',trip_id=trip_id))
             resp.set_cookie('trip_id', trip_id)
@@ -47,13 +46,12 @@ def booking():
 @app.route('/update_trip_status',methods=['GET','POST'])
 def update_trip_status():
     time.sleep(1)
-    print("I am being called")
-
-    return "1"
+    trip_id = request.form["trip_id"]
+    driver_id = controler.get_driver_id(trip_id)
+    return driver_id
 
 
 @app.route('/clear_session')
-
 def clear_session():
     session.clear()
     return redirect(url_for('index'))
