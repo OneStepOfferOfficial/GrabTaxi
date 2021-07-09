@@ -5,14 +5,14 @@
 
 <body>
     <br>
-    <button onclick="startTimer()">
-        Start Timer
+    <button onclick="search_driver()">
+        Confirm
     </button>
     <br>
       
     <script>
         var timer;
-        function startTimer() {
+        function serach_driver() {
             // timer = setInterval(update_status(),4000);
             var xhr = new XMLHttpRequest();
             xhr.open('post', 'http://127.0.0.1:5002/update_trip_status',true)
@@ -24,6 +24,7 @@
                     var new_t = document.createElement("p");
                     new_t.innerText = "driver id is : " + driver_id;
                     document.body.replaceChild(new_t,t);
+                    
                 }
             };
             var t = document.createElement("p"); 
@@ -35,7 +36,7 @@
         function update_status(){
             var myForm = document.createElement("form"); 
             myForm.method = "post"; 
-            myForm.action = "http://127.0.0.1:5002/update_trip_status"; 
+            myForm.action = "http://localhost:5002/update_trip_status"; 
             var myInput = document.createElement("input");  
             myInput.type = "text";  
             myInput.name="trip_id";  
