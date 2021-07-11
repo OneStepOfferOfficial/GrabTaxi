@@ -1,5 +1,7 @@
 from flask import Flask,make_response,url_for,request,render_template,session,redirect
-import controler as controler
+from User import controler as controler
+from User import config as config
+import time
 
 
 app = Flask(__name__)
@@ -32,10 +34,23 @@ def booking():
         return redirect(url_for('login'))
     else:
         if request.method == 'GET':
-            return render_template('booking.html')
+            trip_id = request.cookies.get("trip_id", None)
+            if trip_id == None:
+                return render_template('booking.html')
+            return render_template('show_booking_result.html',host=config.host,port=config.port,trip_id=trip_id)
         else:
             trip_id = controler.create_trip()
-            return render_template('show_booking_result.html',trip_id=trip_id,success=success)
+            resp = make_response(render_template('show_booking_result.html',host=config.host,port=config.port,trip_id=trip_id))
+            resp.set_cookie('trip_id', trip_id)
+            return resp
+
+@app.route('/update_trip_status',methods=['GET','POST'])
+def update_trip_status():
+    time.sleep(1)
+    trip_id = request.form["trip_id"]
+    driver_id = controler.get_driver_id(trip_id)
+    return driver_id
+
 
 @app.route('/clear_session')
 def clear_session():
@@ -43,5 +58,4 @@ def clear_session():
     return redirect(url_for('index'))
 
 if __name__ == '__main__':
-   app.run(port=5002, debug=True)
-
+   app.run(host=config.host,port=config.port)
