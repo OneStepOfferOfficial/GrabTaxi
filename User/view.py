@@ -1,5 +1,5 @@
 from flask import Flask,make_response,url_for,request,render_template,session,redirect
-from User import controler as controler
+from User import controller as controler
 from User import config as config
 import time
 
