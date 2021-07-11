@@ -1,7 +1,11 @@
 from Geo import view as geo_service
+from Dispatch import DBhelper as DBhelper
+import uuid
 
-def store_trip(trip_id,user_name,location_pickup,location_dropoff):
-    pass
+def store_trip(user_id,pickup_location,dropoff_location):
+    trip_id = str(uuid.uuid1()).replace('-', '')
+    DBhelper.insert_trip(trip_id,user_id,pickup_location,dropoff_location)
+    return trip_id
 
 def get_driver_id(trip_id):
     trip_detail = get_trip_detail(trip_id)
