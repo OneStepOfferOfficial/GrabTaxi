@@ -1,5 +1,6 @@
 from flask import Flask,make_response,url_for,request,render_template,session,redirect
 from User import controler as controler
+from User import config as config
 import time
 
 
@@ -36,10 +37,10 @@ def booking():
             trip_id = request.cookies.get("trip_id", None)
             if trip_id == None:
                 return render_template('booking.html')
-            return render_template('show_booking_result.html',trip_id=trip_id)
+            return render_template('show_booking_result.html',host=config.host,port=config.port,trip_id=trip_id)
         else:
             trip_id = controler.create_trip()
-            resp = make_response(render_template('show_booking_result.html',trip_id=trip_id))
+            resp = make_response(render_template('show_booking_result.html',host=config.host,port=config.port,trip_id=trip_id))
             resp.set_cookie('trip_id', trip_id)
             return resp
 
@@ -57,5 +58,4 @@ def clear_session():
     return redirect(url_for('index'))
 
 if __name__ == '__main__':
-   app.run(port=5002, debug=True)
-
+   app.run(host=config.host,port=config.port)

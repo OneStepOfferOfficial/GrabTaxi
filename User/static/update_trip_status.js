@@ -23,7 +23,7 @@ function search_driver() {
 function update_status(){
     var myForm = document.createElement("form"); 
     myForm.method = "post"; 
-    myForm.action = "http://localhost:5002/update_trip_status"; 
+    myForm.action = "http://{{host}}:{{port}}/update_trip_status"; 
     var myInput = document.createElement("input");  
     myInput.type = "text";  
     myInput.name="trip_id";  
