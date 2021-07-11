@@ -4,13 +4,11 @@
 <h2>Hi! Please make your trip <h>
 <br></br>
 <div id="datetime">
-    <script>
-        setInterval("document.getElementById('datetime').innerHTML=new Date().toLocaleString();", 1000);
-    </script>
+<script type="text/javascript" src="../static/show_current_time.js"></script>
 </div>
-    <div class="content">
-       {% block content %}
-        {% endblock %}
- </div>
+<div class="content">
+{% block content %}
+{% endblock %}
+</div>
 </body>
 </html>
