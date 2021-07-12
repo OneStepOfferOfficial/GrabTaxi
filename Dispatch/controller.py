@@ -1,5 +1,6 @@
 from Geo import view as geo_service
 from Dispatch import DBhelper as DBhelper
+import random
 import uuid
 
 def store_trip(user_id,pickup_location,dropoff_location):
@@ -9,20 +10,26 @@ def store_trip(user_id,pickup_location,dropoff_location):
 
 def get_driver_id(trip_id):
     trip_detail = get_trip_detail(trip_id)
-    nearest_drivers = geo_service.find_nearest_drivers(trip_detail)
+    pickup_location = trip_detail[1]
+    nearest_drivers = geo_service.find_nearest_drivers(pickup_location)
     for driver in nearest_drivers:
-        if query_driver(driver) == True:
+        if query_driver(driver.id,trip_detail) == True:
             return driver.id
 
-def query_driver(driver):
+def query_driver(driver_id, trip_detail):
     '''
-    :param driver:
+    Simulate the decision of driver
+    :param driver_id, trip_detail
     :return: True or False (Accept or not)
     '''
+    return random.choice([True,False])
 
 def get_trip_detail(trip_id):
     '''
     :param trip_id:
-    :return: trip_detail=[trip_id,username,location_pickup,location_dropoff,time]
+    :return: trip_detail=[trip_id,pickup_location,dropoff_location]
     '''
-    pass
+    trip_detail = DBhelper.get_trip_detail(trip_id)
+    return trip_detail
+
+

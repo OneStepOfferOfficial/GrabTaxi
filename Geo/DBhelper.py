@@ -1,6 +1,17 @@
 from Geo import config as config
 import psycopg2
 
+class Driver:
+    def __init__(self,id,location):
+        self.location = location
+        self.id = id
+        self.distance = None
+    def calculate_distance(self,pickup_location):
+        # calculate the distance to rider
+        self.distance = (abs(float(pickup_location[0]-self.location[0]))**2 +
+                         abs(float(pickup_location[1]-self.location[1]))**2)**0.5
+        return self.distance
+
 def build_connection():
     connection = psycopg2.connect(database=config.database_name,
                                   user=config.user_name,
@@ -45,3 +56,19 @@ def separate_table():
         connection.commit()
     connection.close()
 
+def get_nearby_drivers(longitude,latitude,distance,search_zones):
+    nearby_drivers = []
+    connection = build_connection()
+    cursor = connection.cursor()
+    for zone in search_zones:
+        query = (f"select * from driver_of_zone{zone} "
+                 f"where longitude < {longitude+distance} "
+                 f" and longitude > {longitude-distance}"
+                 f" and latitude > {latitude-distance}"
+                 f" and latitude < {latitude+distance}")
+        cursor.execute(query)
+        for record in cursor:
+            driver = Driver(record[0],[record[1],record[2]])
+            driver.calculate_distance([longitude,latitude])
+            nearby_drivers.append(driver)
+    return nearby_drivers

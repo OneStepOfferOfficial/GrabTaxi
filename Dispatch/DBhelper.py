@@ -21,6 +21,19 @@ def insert_trip(trip_id,user_id,pickup_location,dropoff_location):
     connection.commit()
     connection.close()
 
+def get_trip_detail(trip_id):
+    connection = build_connection()
+    cursor = connection.cursor()
+    query = "SELECT pickup_location,dropoff_location FROM trip_table " \
+            f"WHERE trip_id = '{trip_id}'"
+    cursor.execute(query)
+    connection.commit()
+    res = cursor.fetchall()
+    pickup_location = res[0][0]
+    dropoff_location = res[0][1]
+    connection.close()
+    return trip_id, pickup_location, dropoff_location
+
 def create_trip_table():
     # create_trip_table
     connection = build_connection()
@@ -61,10 +74,10 @@ def create_driver_table():
     query = "CREATE TABLE driver_table(" \
             "driver_id BIGSERIAL PRIMARY KEY," \
             "driver_name TEXT," \
+            "status TEXT," \
             "phone_number VARCHAR(8)," \
             "password TEXT," \
             "trip_id TEXT);"
     cursor.execute(query)
     connection.commit()
     connection.close()
-

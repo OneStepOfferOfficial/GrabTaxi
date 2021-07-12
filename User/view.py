@@ -49,7 +49,7 @@ def update_trip_status():
     time.sleep(1)
     trip_id = request.form["trip_id"]
     driver_id = controller.get_driver_id(trip_id)
-    return driver_id
+    return str(driver_id)
 
 
 @app.route('/clear_session')
