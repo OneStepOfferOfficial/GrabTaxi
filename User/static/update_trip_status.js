@@ -40,5 +40,3 @@ function stopTimer() {
     alert("Timer stopped");
     clearInterval(timer); 
 }
-
-// document.getElementById('test-button').addEventListener('click', search_driver);
