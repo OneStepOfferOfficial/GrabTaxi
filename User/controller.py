@@ -27,5 +27,5 @@ def create_trip():
     return trip_id
 
 def get_driver_id(trip_id):
-    driver_id = dispatch_service.get_driver_id(trip_id)
+    driver_id = dispatch_service.get_driver_id(trip_id) 
     return driver_id
