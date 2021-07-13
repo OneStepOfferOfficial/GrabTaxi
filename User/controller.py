@@ -19,9 +19,10 @@ def set_cookie():
     return redirect(url_for('index'))
 
 def create_trip():
-    location_pickup = [request.form['lati_of_pickup'],request.form['long_of_pickup']]
-    location_dropoff = [request.form['lati_of_dropoff'],request.form['long_of_dropoff']]
+    location_pickup = [float(request.form['lati_of_pickup']),float(request.form['long_of_pickup'])]
+    location_dropoff = [float(request.form['lati_of_dropoff']),float(request.form['long_of_dropoff'])]
     user_name = request.cookies.get("username", None)
+    print(location_pickup)
     trip_id = dispatch_service.create_trip(location_pickup,location_dropoff,user_name)
     return trip_id
 

@@ -1,10 +1,11 @@
 var timer;
-function search_driver() {
+function search_driver(host,port,trip_id) {
     // timer = setInterval(update_status(),4000);
     var xhr = new XMLHttpRequest();
-    xhr.open('post', 'http://127.0.0.1:5002/update_trip_status',true)
+    var url = 'http://'+host+':'+port+'/update_trip_status';
+    xhr.open('post', url, true);
     xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-    xhr.send("trip_id='{{trip_id}}'");
+    xhr.send("trip_id="+trip_id);
     xhr.onreadystatechange = function () {
         if (xhr.readyState == 4) {
             var driver_id = xhr.responseText
@@ -40,4 +41,4 @@ function stopTimer() {
     clearInterval(timer); 
 }
 
-document.getElementById('test-button').addEventListener('click', search_driver);
+// document.getElementById('test-button').addEventListener('click', search_driver);
