@@ -1,4 +1,6 @@
-from Geo import DBhelper
+from Geo.DBhelper import Helper
+
+DBhelper = Helper()
 
 def find_zone(long,lati):
     '''
@@ -55,6 +57,13 @@ def sort_nearest_drivers(drivers):
     :return: the top 10 drivers_id
     '''
     def swap(l,index1,index2):
+        '''
+        swap the two given index element in the array and return the index2
+        :param l:
+        :param index1:
+        :param index2:
+        :return: index2
+        '''
         l[index1],l[index2] = l[index2],l[index1]
         return index2
     def bubble_down(drivers,index):
@@ -85,3 +94,4 @@ def find_nearest_drivers(pickup_location,distance=4):
     nearby_drivers = DBhelper.get_nearby_drivers(longitude,latitude,distance,search_zones)
     sorted_drivers = sort_nearest_drivers(nearby_drivers)
     return sorted_drivers
+
