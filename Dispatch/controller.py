@@ -1,7 +1,9 @@
 from Geo import view as geo_service
-from Dispatch import DBhelper as DBhelper
+from Dispatch.DBhelper import Helper
 import random
 import uuid
+
+DBhelper = Helper()
 
 def store_trip(user_id,pickup_location,dropoff_location):
     trip_id = str(uuid.uuid1()).replace('-', '')
