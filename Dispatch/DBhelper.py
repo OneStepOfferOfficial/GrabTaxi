@@ -10,12 +10,12 @@ def build_connection():
     return connection
 
 def insert_trip(trip_id,user_id,pickup_location,dropoff_location):
-    pickup_location = {pickup_location[0],pickup_location[1]}
-    dropoff_location = {dropoff_location[0],dropoff_location[1]}
+    pickup_location = "{"+f"{pickup_location[0]}"+","+f"{pickup_location[1]}"+"}"
+    dropoff_location = "{"+f"{dropoff_location[0]}"+","+f"{dropoff_location[1]}"+"}"
     cursor = connection.cursor()
     query = "INSERT INTO trip_table " \
             "(trip_id,user_id,status,pickup_location,dropoff_location)" \
-            f"VALUES ('{trip_id}',{user_id},'created','{pickup_location}','{dropoff_location}');"
+            f"VALUES ('{trip_id}',{user_id},'created',"+"'"+f"{pickup_location}"+"'"+","+"'"+f"{dropoff_location}"+"'"+");"
     cursor.execute(query)
     connection.commit()
 
@@ -69,6 +69,20 @@ def create_driver_table():
             "phone_number VARCHAR(8)," \
             "password TEXT," \
             "trip_id TEXT);"
+    cursor.execute(query)
+    connection.commit()
+
+def updata_trip_status(trip_id,driver_id,status):
+    if status == "refused":
+        query = "UPDATE trip_table " \
+                f"SET driver_id_refused = driver_id_refused || {driver_id}::bigint " \
+                f"WHERE trip_id = '{trip_id}';"
+    else:
+        query = "UPDATE trip_table " \
+                f"SET driver_id = {driver_id} ," \
+                f"status = '{status}' " \
+                f"WHERE trip_id = '{trip_id}';"
+    cursor = connection.cursor()
     cursor.execute(query)
     connection.commit()
 

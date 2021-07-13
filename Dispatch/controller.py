@@ -14,7 +14,11 @@ def get_driver_id(trip_id):
     nearest_drivers = geo_service.find_nearest_drivers(pickup_location)
     for driver in nearest_drivers:
         if query_driver(driver.id,trip_detail) == True:
+            DBhelper.updata_trip_status(trip_id,driver.id,status="accepted")
             return driver.id
+        else:
+            DBhelper.updata_trip_status(trip_id,driver.id,status="refused")
+
 
 def query_driver(driver_id, trip_detail):
     '''
