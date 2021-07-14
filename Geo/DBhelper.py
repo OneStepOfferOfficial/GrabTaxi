@@ -43,13 +43,12 @@ class Helper:
 
     def separate_table(self):
         # build zone tables according to the driver position
-        query = "CREATE TABLE driver_location_table(" \
-                "driver_id BIGSERIAL PRIMARY KEY," \
-                "longitude DECIMAL," \
-                "latitude DECIMAL," \
-                "zone INT);"
-        self.cursor.execute(query)
-        self.connection.commit()
+        for zone in range(100):
+            query = f"CREATE TABLE driver_of_zone{zone} AS " \
+                    f"SELECT * from driver_location_table " \
+                    f"WHERE zone={zone}"
+            self.cursor.execute(query)
+            self.connection.commit()
 
     def get_nearby_drivers(self,longitude, latitude, distance, search_zones):
         nearby_drivers = []
