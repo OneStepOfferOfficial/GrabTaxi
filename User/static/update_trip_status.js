@@ -12,11 +12,11 @@ function search_driver(host,port,trip_id) {
             var new_t = document.createElement("p");
             new_t.innerText = "driver id is : " + driver_id;
             document.body.replaceChild(new_t,t);
-            
         }
     };
     var t = document.createElement("p"); 
-    // document.body.removeChild(t);   
+    var button = document.getElementById("button");
+    button.parentNode.removeChild(button);
     t.innerText = "Searching for driver";
     document.body.appendChild(t);
 }
@@ -36,7 +36,3 @@ function update_status(){
     document.body.removeChild(myForm);
 }
 
-function stopTimer() {
-    alert("Timer stopped");
-    clearInterval(timer); 
-}

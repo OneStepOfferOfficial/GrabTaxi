@@ -77,3 +77,26 @@ class Helper:
                     f"WHERE trip_id = '{trip_id}';"
         self.cursor.execute(query)
         self.connection.commit()
+
+    def get_driver_status(self,driver_id):
+        query = "SELECT status FROM driver_table " \
+                f"WHERE driver_id = {driver_id}"
+        self.cursor.execute(query)
+        driver_status = self.cursor.fetchall()[0][0]
+        return driver_status
+
+    def update_driver_status(self,driver_id,status):
+        query = "UPDATE driver_table " \
+                f"SET status='{status}' " \
+                f"WHERE driver_id = {driver_id}"
+        self.cursor.execute(query)
+        self.connection.commit()
+
+    def get_driver_id_refused(self,trip_id):
+        # return list of drivers who have rejected this trip
+        query = "SELECT driver_id_refused FROM trip_table " \
+                f"WHERE trip_id = '{trip_id}'"
+        self.cursor.execute(query)
+        result = self.cursor.fetchall()[0][0]
+        return result
+

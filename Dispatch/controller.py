@@ -13,14 +13,20 @@ def store_trip(user_id,pickup_location,dropoff_location):
 def get_driver_id(trip_id):
     trip_detail = get_trip_detail(trip_id)
     pickup_location = trip_detail[1]
-    nearest_drivers = geo_service.find_nearest_drivers(pickup_location)
-    for driver in nearest_drivers:
-        if query_driver(driver.id,trip_detail) == True:
-            DBhelper.update_trip_status(trip_id,driver.id,status="accepted")
-            return driver.id
-        else:
-            DBhelper.update_trip_status(trip_id,driver.id,status="refused")
-
+    # Keep finding nearest drivers and ask their decision
+    while 1:
+        nearest_drivers = geo_service.find_nearest_drivers(pickup_location)
+        for driver in nearest_drivers:
+            driver_answer = query_driver(driver.id,trip_detail)
+            if driver_answer == "accepted":
+                DBhelper.update_trip_status(trip_id,driver.id,status="accepted")
+                DBhelper.update_driver_status(driver.id,status="busy")
+                return driver.id
+            elif driver_answer == "busy" or driver_answer == "already refused":
+                continue
+            elif driver_answer == "refused":
+                DBhelper.update_trip_status(trip_id,driver.id,status="refused")
+                continue
 
 def query_driver(driver_id, trip_detail):
     '''
@@ -28,7 +34,14 @@ def query_driver(driver_id, trip_detail):
     :param driver_id, trip_detail
     :return: True or False (Accept or not)
     '''
-    return random.choice([True,False])
+    trip_id = trip_detail[0]
+    driver_id_refused = DBhelper.get_driver_id_refused(trip_id)
+    if driver_id_refused is not None and driver_id in driver_id_refused:
+        return "already refused"
+    driver_status = DBhelper.get_driver_status(driver_id)
+    if driver_status == "busy":
+        return "busy"
+    return random.choice(["accepted","refused"])
 
 def get_trip_detail(trip_id):
     '''
@@ -37,5 +50,3 @@ def get_trip_detail(trip_id):
     '''
     trip_detail = DBhelper.get_trip_detail(trip_id)
     return trip_detail
-
-
