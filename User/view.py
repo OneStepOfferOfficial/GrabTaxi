@@ -51,7 +51,6 @@ def update_trip_status():
     driver_id = controller.get_driver_id(trip_id)
     return str(driver_id)
 
-
 @app.route('/clear_session')
 def clear_session():
     session.clear()

@@ -1,4 +1,5 @@
 from Geo import config as config
+from Common.util import *
 import psycopg2
 
 class Driver:
@@ -64,3 +65,37 @@ class Helper:
                 driver.calculate_distance([longitude, latitude])
                 nearby_drivers.append(driver)
         return nearby_drivers
+
+    def update_driver_location(self,driver_id,longitude,latitude):
+        query = ("SELECT zone FROM driver_location_table "
+                 f"WHERE driver_id = {driver_id} ")
+        self.cursor.execute(query)
+        origin_zone = self.cursor.fetchall()[0][0]
+        new_zone = find_zone(longitude,latitude)
+        if origin_zone == new_zone:
+            # update the driver location in the corresponding driver_of_zone_table
+            query = (f"UPDATE driver_of_zone{origin_zone} "
+                     f"SET longitude = {longitude},"
+                     f"latitude = {latitude} "
+                     f"WHERE driver_id = {driver_id}")
+            self.cursor.execute(query)
+            self.connection.commit()
+        else:
+            # delete the driver location record in the original driver_of_zone(origin_zone)_table
+            query = (f"DELETE FROM driver_of_zone{origin_zone} "
+                     f"WHERE driver_id = {driver_id};")
+            self.cursor.execute(query)
+            self.connection.commit()
+            # insert the driver location record in the driver_of_zone(new_zone) table
+            query = (f"INSERT INTO driver_of_zone{new_zone} "
+                     f"VALUES ('{driver_id}','{longitude}','{latitude}','{new_zone}')")
+            self.cursor.execute(query)
+            self.connection.commit()
+        # update the driver location in the driver_location_table
+        query = ("UPDATE driver_location_table "
+                 f"SET longitude = {longitude},"
+                 f"latitude = {latitude}, "
+                 f"zone = {new_zone}"
+                 f"WHERE driver_id = {driver_id}")
+        self.cursor.execute(query)
+        self.connection.commit()

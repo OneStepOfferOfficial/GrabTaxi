@@ -30,3 +30,14 @@ def bubble_down(drivers, index):
             if drivers[index].distance > drivers[left_child_index].distance:
                 index = swap(drivers, index, left_child_index)
                 bubble_down(drivers, index)
+
+def find_zone(long,lati):
+    '''
+    find the zone where the driver is
+    :param long:
+    :param lati:
+    :return: if the location is valid, return the corresponding zone otherwise return -1
+    '''
+    if long < 0 or lati < 0 or long > 90 or lati > 90:
+        return -1
+    return  (long)//10 + (lati)//10*10

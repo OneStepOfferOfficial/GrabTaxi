@@ -4,17 +4,6 @@ from Common.enum import *
 
 DBhelper = Helper()
 
-def find_zone(long,lati):
-    '''
-
-    :param long:
-    :param lati:
-    :return: if the location is valid, return the corresponding zone otherwise return -1
-    '''
-    if long < 0 or lati < 0 or long > 90 or lati > 90:
-        return -1
-    return  (long)//10 + (lati)//10*10
-
 def get_search_zones(long,lati,distance,origin_zone):
     '''
     judge whether needs to search the drivers in the neighbour zones, if so put the zone into res
