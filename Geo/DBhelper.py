@@ -98,3 +98,12 @@ class Helper:
                  f"WHERE driver_id = {driver_id}")
         self.cursor.execute(query)
         self.connection.commit()
+
+    def get_driver_location(self,driver_id):
+        query = "SELECT longitude, latitude FROM driver_location_table " \
+                f"WHERE driver_id = {driver_id}"
+        self.cursor.execute(query)
+        driver_location = self.cursor.fetchall()[0]
+        return driver_location
+
+

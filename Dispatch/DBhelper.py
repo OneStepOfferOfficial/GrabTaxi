@@ -78,6 +78,20 @@ class Helper:
         self.cursor.execute(query)
         self.connection.commit()
 
+    def get_trip_status(self,trip_id):
+        query = "SELECT status FROM trip_table " \
+                f"WHERE trip_id = {trip_id}"
+        self.cursor.execute(query)
+        trip_status = self.cursor.fetchall()[0][0]
+        return trip_status
+
+    def get_driver_id(self,trip_id):
+        query = "SELECT driver_id FROM trip_table " \
+                f"WHERE trip_id = {trip_id}"
+        self.cursor.execute(query)
+        driver_id = self.cursor.fetchall()[0][0]
+        return driver_id
+
     def get_driver_status(self,driver_id):
         query = "SELECT status FROM driver_table " \
                 f"WHERE driver_id = {driver_id}"
@@ -99,4 +113,3 @@ class Helper:
         self.cursor.execute(query)
         result = self.cursor.fetchall()[0][0]
         return result
-

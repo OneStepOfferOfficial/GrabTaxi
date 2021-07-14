@@ -44,12 +44,20 @@ def booking():
             resp.set_cookie('trip_id', trip_id)
             return resp
 
-@app.route('/update_trip_status',methods=['GET','POST'])
-def update_trip_status():
+@app.route('/search_driver',methods=['GET','POST'])
+def search_driver():
     time.sleep(1)
     trip_id = request.form["trip_id"]
     driver_id = controller.get_driver_id(trip_id)
     return str(driver_id)
+
+@app.route('/update_driver_location',methods=['GET','POST'])
+def update_driver_location():
+    driver_id = request.form["driver_id"]
+    driver_location = controller.get_driver_location(driver_id)
+    longitude = driver_location[0]
+    latitude = driver_location[1]
+    return  longitude,latitude
 
 @app.route('/clear_session')
 def clear_session():

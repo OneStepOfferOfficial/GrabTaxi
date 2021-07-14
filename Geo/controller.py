@@ -52,3 +52,6 @@ def find_nearest_drivers(pickup_location,distance=4):
     sorted_drivers = sort_nearest_drivers(nearby_drivers)
     return sorted_drivers
 
+def get_driver_location(driver_id):
+    driver_locaiton = DBhelper.get_driver_location(driver_id)
+    return driver_locaiton

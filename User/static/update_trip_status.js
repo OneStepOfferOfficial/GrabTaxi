@@ -2,7 +2,7 @@ var timer;
 function search_driver(host,port,trip_id) {
     // timer = setInterval(update_status(),4000);
     var xhr = new XMLHttpRequest();
-    var url = 'http://'+host+':'+port+'/update_trip_status';
+    var url = 'http://'+host+':'+port+'/search_driver';
     xhr.open('post', url, true);
     xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
     xhr.send("trip_id="+trip_id);

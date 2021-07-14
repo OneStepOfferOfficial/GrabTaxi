@@ -8,3 +8,7 @@ def create_trip(location_pickup,location_dropoff,user_name):
 def get_driver_id(trip_id):
     driver_id = controller.get_driver_id(trip_id)
     return driver_id
+
+def get_driver_location(driver_id):
+    driver_location = controller.get_driver_location(driver_id)
+    return driver_location

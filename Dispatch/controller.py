@@ -11,6 +11,10 @@ def store_trip(user_id,pickup_location,dropoff_location):
     return trip_id
 
 def get_driver_id(trip_id):
+    trip_status = DBhelper.get_trip_status(trip_id)
+    if trip_status == "accepted":
+        driver_id = DBhelper.get_driver_id(trip_id)
+        return driver_id
     trip_detail = get_trip_detail(trip_id)
     pickup_location = trip_detail[1]
     # Keep finding nearest drivers and ask their decision
@@ -50,3 +54,7 @@ def get_trip_detail(trip_id):
     '''
     trip_detail = DBhelper.get_trip_detail(trip_id)
     return trip_detail
+
+def get_driver_location(driver_id):
+    driver_location = geo_service.get_driver_location(driver_id)
+    return driver_location
