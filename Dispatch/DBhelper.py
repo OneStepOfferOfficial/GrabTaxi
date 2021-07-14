@@ -45,6 +45,14 @@ class Helper:
         self.cursor.execute(query)
         self.connection.commit()
 
+    def insert_data_into_table(self):
+        query = "COPY driver_table(driver_id,driver_name,status,phone_number,password,trip_id)" \
+                "FROM 'driver_data.csv'" \
+                "DELIMITER ','" \
+                "CSV HEADER"
+        self.cursor.execute(query)
+        self.connection.commit()
+
     def create_driver_table(self):
         # create_driver_table
         query = "CREATE TABLE driver_table(" \
@@ -57,7 +65,7 @@ class Helper:
         self.cursor.execute(query)
         self.connection.commit()
 
-    def updata_trip_status(self,trip_id,driver_id,status):
+    def update_trip_status(self,trip_id,driver_id,status):
         if status == "refused":
             query = "UPDATE trip_table " \
                     f"SET driver_id_refused = driver_id_refused || {driver_id}::bigint " \
