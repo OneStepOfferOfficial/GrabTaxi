@@ -15,7 +15,7 @@ class Helper:
         dropoff_location = "{" + f"{dropoff_location[0]}" + "," + f"{dropoff_location[1]}" + "}"
         query = "INSERT INTO trip_table " \
                 "(trip_id,user_id,status,pickup_location,dropoff_location)" \
-                f"VALUES ('{trip_id}',{user_id},'created'," + "'" + f"{pickup_location}" + "'" + "," + "'" + f"{dropoff_location}" + "'" + ");"
+                f"VALUES ('{trip_id}',{user_id},1," + "'" + f"{pickup_location}" + "'" + "," + "'" + f"{dropoff_location}" + "'" + ");"
         self.cursor.execute(query)
         self.connection.commit()
 
@@ -27,7 +27,7 @@ class Helper:
         res = self.cursor.fetchall()
         pickup_location = res[0][0]
         dropoff_location = res[0][1]
-        return trip_id, pickup_location, dropoff_location
+        return pickup_location, dropoff_location
 
     def create_trip_table(self):
         # create_trip_table
@@ -37,7 +37,7 @@ class Helper:
                 "driver_id BIGINT," \
                 "created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP," \
                 "finished_at TIMESTAMP," \
-                "status TEXT," \
+                "status smallint," \
                 "driver_id_refused BIGINT[]," \
                 "pickup_location DECIMAL[]," \
                 "dropoff_location DECIMAL[]" \
@@ -45,8 +45,8 @@ class Helper:
         self.cursor.execute(query)
         self.connection.commit()
 
-    def insert_data_into_table(self):
-        query = "COPY driver_table(driver_id,driver_name,status,phone_number,password,trip_id)" \
+    def insert_data_into_driver_table(self):
+        query = "COPY driver_table(driver_id,driver_name,status,phone_number,password)" \
                 "FROM 'driver_data.csv'" \
                 "DELIMITER ','" \
                 "CSV HEADER"
@@ -58,23 +58,40 @@ class Helper:
         query = "CREATE TABLE driver_table(" \
                 "driver_id BIGSERIAL PRIMARY KEY," \
                 "driver_name TEXT," \
-                "status TEXT," \
+                "status smallint," \
                 "phone_number VARCHAR(8)," \
-                "password TEXT," \
-                "trip_id TEXT);"
+                "password TEXT);"
         self.cursor.execute(query)
         self.connection.commit()
 
-    def update_trip_status(self,trip_id,driver_id,status):
-        if status == "refused":
-            query = "UPDATE trip_table " \
-                    f"SET driver_id_refused = driver_id_refused || {driver_id}::bigint " \
-                    f"WHERE trip_id = '{trip_id}';"
-        else:
-            query = "UPDATE trip_table " \
-                    f"SET driver_id = {driver_id} ," \
-                    f"status = '{status}' " \
-                    f"WHERE trip_id = '{trip_id}';"
+    def create_user_table(self):
+        # create_user_table
+        query = "CREATE TABLE user_table(" \
+                "user_id BIGSERIAL PRIMARY KEY," \
+                "user_name TEXT," \
+                "phone_number VARCHAR(8)," \
+                "password TEXT);"
+        self.cursor.execute(query)
+        self.connection.commit()
+
+    def update_trip_status(self,trip_id,status):
+        query = "UPDATE trip_table " \
+                f"SET status = {status}" \
+                f"WHERE trip_id = '{trip_id}';"
+        self.cursor.execute(query)
+        self.connection.commit()
+
+    def update_trip_driver(self,trip_id,driver_id):
+        query = "UPDATE trip_table " \
+                f"SET driver_id = {driver_id}" \
+                f"WHERE trip_id = '{trip_id}';"
+        self.cursor.execute(query)
+        self.connection.commit()
+
+    def update_driver_id_refused(self,trip_id,driver_id):
+        query = "UPDATE trip_table " \
+                f"SET driver_id_refused = driver_id_refused || {driver_id}::bigint " \
+                f"WHERE trip_id = '{trip_id}';"
         self.cursor.execute(query)
         self.connection.commit()
 
