@@ -58,3 +58,7 @@ def get_trip_detail(trip_id):
 def get_driver_location(driver_id):
     driver_location = geo_service.get_driver_location(driver_id)
     return driver_location
+
+def get_driver_detail(driver_id):
+    driver_detail = DBhelper.get_driver_detail(driver_id)
+    return driver_detail

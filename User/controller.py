@@ -33,3 +33,7 @@ def get_driver_id(trip_id):
 def get_driver_location(driver_id):
     driver_location = dispatch_service.get_driver_location(driver_id)
     return driver_location
+
+def get_driver_detail(driver_id):
+    driver_detail = dispatch_service.get_driver_detail(driver_id)
+    return driver_detail

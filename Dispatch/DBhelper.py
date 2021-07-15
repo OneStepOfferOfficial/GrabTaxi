@@ -80,14 +80,14 @@ class Helper:
 
     def get_trip_status(self,trip_id):
         query = "SELECT status FROM trip_table " \
-                f"WHERE trip_id = {trip_id}"
+                f"WHERE trip_id = '{trip_id}'"
         self.cursor.execute(query)
         trip_status = self.cursor.fetchall()[0][0]
         return trip_status
 
     def get_driver_id(self,trip_id):
         query = "SELECT driver_id FROM trip_table " \
-                f"WHERE trip_id = {trip_id}"
+                f"WHERE trip_id = '{trip_id}'"
         self.cursor.execute(query)
         driver_id = self.cursor.fetchall()[0][0]
         return driver_id
@@ -111,5 +111,13 @@ class Helper:
         query = "SELECT driver_id_refused FROM trip_table " \
                 f"WHERE trip_id = '{trip_id}'"
         self.cursor.execute(query)
-        result = self.cursor.fetchall()[0][0]
-        return result
+        driver_id_refused = self.cursor.fetchall()[0][0]
+        return driver_id_refused
+
+    def get_driver_detail(self,driver_id):
+        #return a list which is [driver_name,phone_number]
+        query = "SELECT driver_name, phone_number FROM driver_table " \
+                f"WHERE driver_id = {driver_id}"
+        self.cursor.execute(query)
+        driver_detail = self.cursor.fetchall()[0]
+        return driver_detail
