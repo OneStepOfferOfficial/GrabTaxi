@@ -13,7 +13,7 @@ def store_trip(user_id,pickup_location,dropoff_location):
 
 def get_driver_id(trip_id):
     trip_status = DBhelper.get_trip_status(trip_id)
-    if trip_status == "accepted":
+    if trip_status == Trip_status.Accepted:
         driver_id = DBhelper.get_driver_id(trip_id)
         return driver_id
     trip_detail = get_trip_detail(trip_id)
@@ -24,9 +24,9 @@ def get_driver_id(trip_id):
         for driver in nearest_drivers:
             driver_answer = query_driver(driver.id,trip_id,trip_detail)
             if driver_answer == Driver_answer.Accept:
-                DBhelper.update_trip_status(trip_id,status=Trip_status.Accepted.value)
+                DBhelper.update_trip_status(trip_id,status=Trip_status.Accepted)
                 DBhelper.update_trip_driver(trip_id,driver.id)
-                DBhelper.update_driver_status(driver.id,status=Driver_status.Not_available.value)
+                DBhelper.update_driver_status(driver.id,status=Driver_status.Not_available)
                 return driver.id
             elif driver_answer == Driver_answer.Already_refused or driver_answer == Driver_answer.Busy:
                 continue
@@ -63,3 +63,11 @@ def get_driver_location(driver_id):
 def get_driver_detail(driver_id):
     driver_detail = DBhelper.get_driver_detail(driver_id)
     return driver_detail
+
+def update_trip_status(trip_id,status):
+    if status == Trip_status.Ongoing:
+        DBhelper.update_trip_status(trip_id,status)
+    elif status == Trip_status.Finished:
+        DBhelper.update_trip_status(trip_id,status)
+        driver_id = DBhelper.get_driver_id(trip_id)
+        DBhelper.update_driver_status(driver_id,Driver_status.Available)

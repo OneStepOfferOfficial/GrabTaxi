@@ -1,4 +1,5 @@
 from Dispatch import controller as controller
+from Common.enum import *
 
 
 def create_trip(location_pickup,location_dropoff,user_name):
@@ -16,3 +17,8 @@ def get_driver_location(driver_id):
 def get_driver_detail(driver_id):
     driver_detail = controller.get_driver_detail(driver_id)
     return driver_detail
+
+def update_trip_status(trip_id,status):
+    status = status
+    controller.update_trip_status(trip_id,status)
+    return

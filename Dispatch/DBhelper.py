@@ -1,5 +1,7 @@
 from Dispatch import config
 import psycopg2
+from Common.enum import *
+
 
 class Helper:
     def __init__(self):
@@ -75,11 +77,19 @@ class Helper:
         self.connection.commit()
 
     def update_trip_status(self,trip_id,status):
+        if type(status) != int:
+            status = status.value
         query = "UPDATE trip_table " \
                 f"SET status = {status}" \
                 f"WHERE trip_id = '{trip_id}';"
         self.cursor.execute(query)
         self.connection.commit()
+        if status == 4: # if the trip is finished, edit the finish_at column.
+            query = "UPDATE trip_table " \
+                    f"SET finished_at = CURRENT_TIMESTAMP " \
+                    f"WHERE trip_id = '{trip_id}'"
+            self.cursor.execute(query)
+            self.connection.commit()
 
     def update_trip_driver(self,trip_id,driver_id):
         query = "UPDATE trip_table " \
@@ -99,7 +109,8 @@ class Helper:
         query = "SELECT status FROM trip_table " \
                 f"WHERE trip_id = '{trip_id}'"
         self.cursor.execute(query)
-        trip_status = self.cursor.fetchall()[0][0]
+        trip_status_value = self.cursor.fetchall()[0][0]
+        trip_status = Trip_status(trip_status_value)
         return trip_status
 
     def get_driver_id(self,trip_id):
@@ -113,10 +124,13 @@ class Helper:
         query = "SELECT status FROM driver_table " \
                 f"WHERE driver_id = {driver_id}"
         self.cursor.execute(query)
-        driver_status = self.cursor.fetchall()[0][0]
+        driver_status_value = self.cursor.fetchall()[0][0]
+        driver_status = Driver_status(driver_status_value)
         return driver_status
 
     def update_driver_status(self,driver_id,status):
+        if type(status) != int:
+            status = status.value
         query = "UPDATE driver_table " \
                 f"SET status='{status}' " \
                 f"WHERE driver_id = {driver_id}"
