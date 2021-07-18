@@ -1,20 +1,10 @@
 from Geo.DBhelper import Helper
-from Geo.util import *
+from Common.util import *
+from Common.enum import *
 
 DBhelper = Helper()
 
-def find_zone(long,lati):
-    '''
-
-    :param long:
-    :param lati:
-    :return: if the location is valid, return the corresponding zone otherwise return -1
-    '''
-    if long < 0 or lati < 0 or long > 90 or lati > 90:
-        return -1
-    return  (long)//10 + (lati)//10*10
-
-def get_search_zones(long,lati,distance,zone):
+def get_search_zones(long,lati,distance,origin_zone):
     '''
     judge whether needs to search the drivers in the neighbour zones, if so put the zone into res
     :param long:
@@ -23,33 +13,24 @@ def get_search_zones(long,lati,distance,zone):
     :param zone:
     :return: A list of zones to search for nearby drivers
     '''
-    res = []
-    res.append(zone)
-    over_right = False
-    over_left = False
-    over_up = False
-    over_down = False
-    if find_zone(long,lati+distance) != zone and find_zone(long,lati+distance) != -1:
-        over_up = True
-        res.append(find_zone(long,lati+distance))
-    if find_zone(long,lati-distance) != zone and find_zone(long,lati-distance) != -1:
-        over_down = True
-        res.append(find_zone(long,lati-distance))
-    if find_zone(long+distance,lati) != zone and find_zone(long+distance,lati) != -1:
-        over_right = True
-        res.append(find_zone(long+distance,lati))
-    if find_zone(long-distance,lati) != zone and find_zone(long-distance,lati) != -1:
-        over_left = True
-        res.append(find_zone(long-distance,lati))
-    if over_left and over_up:
-        res.append(zone+9)
-    if over_right and over_up:
-        res.append(zone+11)
-    if over_down and over_left:
-        res.append(zone-11)
-    if over_down and over_right:
-        res.append(zone-9)
-    return res
+    final_result = [origin_zone]
+    direction_zone_dict = {Direction.Right: find_zone(long, lati + distance), Direction.Left: find_zone(long, lati - distance),
+                           Direction.Up: find_zone(long + distance, lati), Direction.Down: find_zone(long - distance, lati)}
+
+    valid_directions = []
+    for dir, zone in direction_zone_dict.items():
+        if zone != origin_zone and zone != -1:
+            valid_directions.append(dir)
+            final_result.append(zone)
+
+    if len(valid_directions) >= 2:
+        neighbour_zone_direct_dict = {origin_zone + 9: (Direction.Left, Direction.Up), origin_zone + 11: (Direction.Right, Direction.Up),
+                                      origin_zone - 11: (Direction.Down, Direction.Left), origin_zone - 9: (Direction.Down, Direction.Right)}
+
+        for neighbour, dir_tuple in neighbour_zone_direct_dict.items():
+            if dir_tuple[0] in valid_directions and dir_tuple[1] in valid_directions:
+                final_result.append(neighbour)
+    return final_result
 
 def sort_nearest_drivers(drivers):
     '''
@@ -71,3 +52,6 @@ def find_nearest_drivers(pickup_location,distance=4):
     sorted_drivers = sort_nearest_drivers(nearby_drivers)
     return sorted_drivers
 
+def get_driver_location(driver_id):
+    driver_locaiton = DBhelper.get_driver_location(driver_id)
+    return driver_locaiton

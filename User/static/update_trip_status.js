@@ -1,8 +1,14 @@
-var timer;
+var Trip_status = {
+    Created : 1,
+    Accepted : 2,
+    Ongoing : 3,
+    Finished : 4,
+};
+
 function search_driver(host,port,trip_id) {
-    // timer = setInterval(update_status(),4000);
+    window.trip_id = trip_id;
     var xhr = new XMLHttpRequest();
-    var url = 'http://'+host+':'+port+'/update_trip_status';
+    var url = 'http://'+host+':'+port+'/search_driver';
     xhr.open('post', url, true);
     xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
     xhr.send("trip_id="+trip_id);
@@ -12,33 +18,80 @@ function search_driver(host,port,trip_id) {
             var new_t = document.createElement("p");
             new_t.innerText = "driver id is : " + driver_id;
             document.body.replaceChild(new_t,t);
-            
+            startTimer(host,port,driver_id);
         }
     };
+    var button = document.getElementById("button");
+    button.parentNode.removeChild(button);
     var t = document.createElement("p"); 
-    // document.body.removeChild(t);   
     t.innerText = "Searching for driver";
     document.body.appendChild(t);
-}
+};
 
-function update_status(){
-    var myForm = document.createElement("form"); 
-    myForm.method = "post"; 
-    myForm.action = "http://{{host}}:{{port}}/update_trip_status"; 
-    var myInput = document.createElement("input");  
-    myInput.type = "text";  
-    myInput.name="trip_id";  
-    myInput.value="{{trip_id}}";  
-    console.log(myInput.value);
-    myForm.appendChild(myInput); 
-    document.body.appendChild(myForm);  
-    myForm.submit();  
-    document.body.removeChild(myForm);
-}
+function startTimer(host,port,driver_id){
+    window.host = host;
+    window.port = port;
+    window.driver_id = driver_id;
+    window.longitude = document.createElement("p"); 
+    window.longitude.innerText = "Updating the longitude of driver location";
+    document.body.appendChild(window.longitude);
+    window.latitude = document.createElement("p"); 
+    window.latitude.innerText = "Updating the latitude of driver location";
+    document.body.appendChild(window.latitude);
+    var timer = window.setInterval(get_driver_location,1000)
+    var xhr = new XMLHttpRequest();
+    var url = 'http://'+host+':'+port+'/get_driver_detail';
+    xhr.open('post', url, true);
+    xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+    xhr.send("driver_id="+driver_id);
+    xhr.onreadystatechange = function () {
+        if (xhr.readyState == 4) {
+            var data = JSON.parse(xhr.response);
+            var driver_name = document.createElement("p");
+            var phone_number = document.createElement("p");
+            driver_name.innerText = "driver name is : " + data["driver_name"];
+            phone_number.innerText = "driver phone_number is : " + data["phone_number"];
+            document.body.appendChild(driver_name);
+            document.body.appendChild(phone_number);
+            var trip_status = document.createElement("BUTTON");
+            trip_status.innerText = "I am picked up";
+            trip_status.onclick = function(){update_trip_status(window.trip_id,Trip_status.Ongoing)};
+            trip_status.setAttribute("id","trip_status");
+            document.body.appendChild(trip_status);
+        }
+    };
+};
 
-function stopTimer() {
-    alert("Timer stopped");
-    clearInterval(timer); 
-}
+function update_trip_status(trip_id,status){
+    if (status==Trip_status.Finished){
+        var url = 'http://'+window.host+':'+window.port+'/finished_my_trip';
+        window.location.replace(url);
+    }
+    var xhr = new XMLHttpRequest();
+    var url = 'http://'+window.host+':'+window.port+'/update_trip_status';
+    xhr.open('post', url, true);
+    xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+    xhr.send("trip_id="+trip_id+'&'+"status="+status);
+    xhr.onreadystatechange = function () {
+        if (xhr.readyState == 4) {
+            trip_status = document.getElementById("trip_status");
+            trip_status.innerText = "I am dropped off";
+            trip_status.onclick = function(){update_trip_status(window.trip_id,Trip_status.Finished)};
+        };
+    };
+};
 
-// document.getElementById('test-button').addEventListener('click', search_driver);
+function get_driver_location(){
+    var xhr = new XMLHttpRequest();
+    var url = 'http://'+window.host+':'+window.port+'/get_driver_location';
+    xhr.open('post', url, true);
+    xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+    xhr.send("driver_id="+window.driver_id);
+    xhr.onreadystatechange = function () {
+        if (xhr.readyState == 4) {
+            var data = JSON.parse(xhr.response);
+            window.longitude.innerText = "logitude of driver location is : "+data['longitude'];
+            window.latitude.innerText = "latitude of driver location is : "+data['latitude'];
+        };
+    };
+};
