@@ -89,5 +89,17 @@ def clear_session():
     session.clear()
     return redirect(url_for('index'))
 
+@app.route('/signup',methods=['GET','POST'])
+def sign_up():
+    if request.method == 'GET':
+        return render_template('sign_up.html')
+    elif request.method == 'POST':
+        name = request.form["name"]
+        password = request.form['password']
+        phone_number = request.form["phone_number"]
+        character = request.form["character"]
+        controller.sign_up(character,name,password,phone_number)
+        return redirect(url_for('index'))
+
 if __name__ == '__main__':
     app.run(host=config.host, port=config.port)

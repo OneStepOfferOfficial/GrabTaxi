@@ -19,6 +19,13 @@ def get_driver_detail(driver_id):
     return driver_detail
 
 def update_trip_status(trip_id,status):
-    status = status
     controller.update_trip_status(trip_id,status)
+    return
+
+def sign_up_user(user_name,password,phone_number):
+    controller.sign_up_user(user_name,password,phone_number)
+    return
+
+def sign_up_driver(driver_name, password, phone_number):
+    controller.sign_up_driver(driver_name, password, phone_number)
     return

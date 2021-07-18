@@ -47,3 +47,9 @@ def finished_my_trip():
         redirect(url_for('index')))
     resp.set_cookie('trip_id', "0")
     return resp
+
+def sign_up(character,name,password,phone_number):
+    if character == "user":
+        dispatch_service.sign_up_user(name,password,phone_number)
+    elif character == "driver":
+        dispatch_service.sign_up_driver(name,password,phone_number)

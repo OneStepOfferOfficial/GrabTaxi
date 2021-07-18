@@ -21,6 +21,25 @@ class Helper:
         self.cursor.execute(query)
         self.connection.commit()
 
+    def insert_driver(self,driver_name,password,phone_number):
+        query = "INSERT INTO driver_table " \
+                "(driver_name,password,phone_number)" \
+                f"VALUES ('{driver_name}','{password}', '{phone_number}');"
+        self.cursor.execute(query)
+        self.connection.commit()
+        # reset the max id to avoid id conflict
+        query = "select setval('driver_table_driver_id_seq', (select max(driver_id) from driver_table));"
+        self.cursor.execute(query)
+        self.connection.commit()
+
+
+    def insert_user(self,user_name,password,phone_number):
+        query = "INSERT INTO user_table " \
+                "(user_name,password,phone_number)" \
+                f"VALUES ('{user_name}','{password}', '{phone_number}');"
+        self.cursor.execute(query)
+        self.connection.commit()
+
     def get_trip_detail(self,trip_id):
         query = "SELECT pickup_location,dropoff_location FROM trip_table " \
                 f"WHERE trip_id = '{trip_id}'"
