@@ -171,3 +171,17 @@ class Helper:
         self.cursor.execute(query)
         driver_detail = self.cursor.fetchall()[0]
         return driver_detail
+
+    def get_password_user(self,user_name):
+        query = "SELECT password FROM user_table " \
+                f"WHERE user_name = '{user_name}';"
+        self.cursor.execute(query)
+        password = self.cursor.fetchall()[0][0]
+        return password
+
+    def get_user_id(self,user_name):
+        query = "SELECT user_id FROM user_table " \
+                f"WHERE user_name = '{user_name}'"
+        self.cursor.execute(query)
+        user_id = self.cursor.fetchall()[0][0]
+        return user_id

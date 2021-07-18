@@ -6,7 +6,7 @@ import uuid
 
 DBhelper = Helper()
 
-def store_trip(user_id,pickup_location,dropoff_location):
+def insert_trip(user_id,pickup_location,dropoff_location):
     trip_id = str(uuid.uuid1()).replace('-', '')
     DBhelper.insert_trip(trip_id,user_id,pickup_location,dropoff_location)
     return trip_id
@@ -71,6 +71,17 @@ def update_trip_status(trip_id,status):
         DBhelper.update_trip_status(trip_id,status)
         driver_id = DBhelper.get_driver_id(trip_id)
         DBhelper.update_driver_status(driver_id,Driver_status.Available)
+
+def verify_password_user(user_name,password):
+    real_password = DBhelper.get_password_user(user_name)
+    if real_password == password:
+        return True
+    else:
+        return False
+
+def get_user_id(user_name):
+    user_id = DBhelper.get_user_id(user_name)
+    return user_id
 
 def sign_up_user(user_name,password,phone_number):
     DBhelper.insert_user(user_name,password,phone_number)

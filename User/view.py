@@ -10,28 +10,29 @@ app.config.from_pyfile('config.py')
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
-    user_logged_in, username = controller.check_user_status()
+    user_logged_in, user_name = controller.check_user_status()
     if user_logged_in:
         if request.method == "POST":
             return redirect(url_for('booking'))
-        return render_template('index.html', name=username)
+        return render_template('index.html', name=user_name)
     return redirect(url_for('login'))
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
-    user_logged_in, username = controller.check_user_status()
+    user_logged_in, user_name = controller.check_user_status()
     if request.method == 'GET':
         if user_logged_in:
             return redirect(url_for('index'))
         else:
             return render_template('login.html')
     elif request.method == "POST":
-        return controller.set_cookie()
-
+        user_name = request.form["user_name"]
+        password = request.form["password"]
+        return controller.login(user_name,password)
 
 @app.route('/booking', methods=['GET', 'POST'])
 def booking():
-    user_logged_in, username = controller.check_user_status()
+    user_logged_in, user_name = controller.check_user_status()
     if not user_logged_in:
         return redirect(url_for('login'))
     else:
