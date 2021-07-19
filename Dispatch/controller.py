@@ -3,8 +3,7 @@ from Dispatch.DBhelper import Helper
 from Common.enum import *
 import random
 import uuid
-
-DBhelper = Helper()
+from Dispatch import DBhelper as DBhelper
 
 def insert_trip(user_id,pickup_location,dropoff_location):
     trip_id = str(uuid.uuid1()).replace('-', '')

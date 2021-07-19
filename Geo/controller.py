@@ -1,8 +1,7 @@
 from Geo.DBhelper import Helper
 from Common.util import *
 from Common.enum import *
-
-DBhelper = Helper()
+from Geo import DBhelper as DBhelper
 
 def get_search_zones(long,lati,distance,origin_zone):
     '''
