@@ -87,3 +87,4 @@ def sign_up_user(user_name,password,phone_number):
 
 def sign_up_driver(driver_name,password,phone_number):
     DBhelper.insert_driver(driver_name,password,phone_number)
+
