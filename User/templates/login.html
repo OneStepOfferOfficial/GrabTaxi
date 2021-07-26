@@ -1,13 +1,13 @@
 <!DOCTYPE html>
 <html>
 <body>
-<form method="POST">
     <h>Hi! Please log in <h>
-    <p>username <input type="text" name="user_name"></p>
+    <p >username <input type="text" id="user_name"></p>
     <br>
-    <p>password <input type="text" name="password"></p>
+    <p >password <input type="text" id="password"></p>
     <br>
-    <p><input type="submit" value="login"></p>
-</form>
+    <button id="button" onclick="login('{{host}}','{{port}}')">Confirm</button>
+    <script type="text/javascript" src="../static/login.js">
+    </script>
 </body>
 </html>

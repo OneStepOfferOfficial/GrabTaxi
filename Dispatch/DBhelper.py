@@ -3,27 +3,28 @@ import psycopg2
 from Common.enum import *
 from Common.decorator import *
 
+
 class Helper:
     def __init__(self):
         self.connection = psycopg2.connect(database=config.database_name,
-                                      user=config.user_name,
-                                      password=config.password,
-                                      port=config.port,
-                                      )
+                                           user=config.user_name,
+                                           password=config.password,
+                                           port=config.port,
+                                           )
         self.cursor = self.connection.cursor()
 
     @log_error_db
-    def insert_trip(self,trip_id,user_id,pickup_location,dropoff_location):
+    def insert_trip(self, trip_id, user_id, pickup_location, dropoff_location):
         pickup_location = "{" + f"{pickup_location[0]}" + "," + f"{pickup_location[1]}" + "}"
         dropoff_location = "{" + f"{dropoff_location[0]}" + "," + f"{dropoff_location[1]}" + "}"
         query = "INSERT INTO trip_table " \
                 "(trip_id,user_id,status,pickup_location,dropoff_location)" \
-                f"VALUES ('{trip_id}',{user_id},1," + "'" + f"{pickup_location}" + "'" + "," + "'" + f"{dropoff_location}" + "'" + ");"
+                f"VALUES ('{trip_id}',{user_id},1," + "'" + f"{pickup_location}" + "'" + "," + "'" + f"{dropoff_location}" + "'" + "); "
         self.cursor.execute(query)
         self.connection.commit()
 
     @log_error_db
-    def insert_driver(self,driver_name,password,phone_number):
+    def insert_driver(self, driver_name, password, phone_number):
         query = "INSERT INTO driver_table " \
                 "(driver_name,password,phone_number)" \
                 f"VALUES ('{driver_name}','{password}', '{phone_number}');"
@@ -35,7 +36,7 @@ class Helper:
         self.connection.commit()
 
     @log_error_db
-    def insert_user(self,user_name,password,phone_number):
+    def insert_user(self, user_name, password, phone_number):
         query = "INSERT INTO user_table " \
                 "(user_name,password,phone_number)" \
                 f"VALUES ('{user_name}','{password}', '{phone_number}');"
@@ -43,7 +44,7 @@ class Helper:
         self.connection.commit()
 
     @log_error_db
-    def get_trip_detail(self,trip_id):
+    def get_trip_detail(self, trip_id):
         query = "SELECT pickup_location,dropoff_location FROM trip_table " \
                 f"WHERE trip_id = '{trip_id}'"
         self.cursor.execute(query)
@@ -103,7 +104,7 @@ class Helper:
         self.connection.commit()
 
     @log_error_db
-    def update_trip_status(self,trip_id,status):
+    def update_trip_status(self, trip_id, status):
         if type(status) != int:
             status = status.value
         query = "UPDATE trip_table " \
@@ -111,7 +112,7 @@ class Helper:
                 f"WHERE trip_id = '{trip_id}';"
         self.cursor.execute(query)
         self.connection.commit()
-        if status == 4: # if the trip is finished, edit the finish_at column.
+        if status == 4:  # if the trip is finished, edit the finish_at column.
             query = "UPDATE trip_table " \
                     f"SET finished_at = CURRENT_TIMESTAMP " \
                     f"WHERE trip_id = '{trip_id}'"
@@ -119,7 +120,7 @@ class Helper:
             self.connection.commit()
 
     @log_error_db
-    def update_trip_driver(self,trip_id,driver_id):
+    def update_trip_driver(self, trip_id, driver_id):
         query = "UPDATE trip_table " \
                 f"SET driver_id = {driver_id}" \
                 f"WHERE trip_id = '{trip_id}';"
@@ -127,7 +128,7 @@ class Helper:
         self.connection.commit()
 
     @log_error_db
-    def update_driver_id_refused(self,trip_id,driver_id):
+    def update_driver_id_refused(self, trip_id, driver_id):
         query = "UPDATE trip_table " \
                 f"SET driver_id_refused = driver_id_refused || {driver_id}::bigint " \
                 f"WHERE trip_id = '{trip_id}';"
@@ -135,7 +136,7 @@ class Helper:
         self.connection.commit()
 
     @log_error_db
-    def get_trip_status(self,trip_id):
+    def get_trip_status(self, trip_id):
         query = "SELECT status FROM trip_table " \
                 f"WHERE trip_id = '{trip_id}'"
         self.cursor.execute(query)
@@ -144,7 +145,7 @@ class Helper:
         return trip_status
 
     @log_error_db
-    def get_driver_id(self,trip_id):
+    def get_driver_id(self, trip_id):
         query = "SELECT driver_id FROM trip_table " \
                 f"WHERE trip_id = '{trip_id}'"
         self.cursor.execute(query)
@@ -152,7 +153,7 @@ class Helper:
         return driver_id
 
     @log_error_db
-    def get_driver_status(self,driver_id):
+    def get_driver_status(self, driver_id):
         query = "SELECT status FROM driver_table " \
                 f"WHERE driver_id = {driver_id}"
         self.cursor.execute(query)
@@ -161,7 +162,7 @@ class Helper:
         return driver_status
 
     @log_error_db
-    def update_driver_status(self,driver_id,status):
+    def update_driver_status(self, driver_id, status):
         if type(status) != int:
             status = status.value
         query = "UPDATE driver_table " \
@@ -171,7 +172,7 @@ class Helper:
         self.connection.commit()
 
     @log_error_db
-    def get_driver_id_refused(self,trip_id):
+    def get_driver_id_refused(self, trip_id):
         # return list of drivers who have rejected this trip
         query = "SELECT driver_id_refused FROM trip_table " \
                 f"WHERE trip_id = '{trip_id}'"
@@ -180,8 +181,8 @@ class Helper:
         return driver_id_refused
 
     @log_error_db
-    def get_driver_detail(self,driver_id):
-        #return a list which is [driver_name,phone_number]
+    def get_driver_detail(self, driver_id):
+        # return a list which is [driver_name,phone_number]
         query = "SELECT driver_name, phone_number FROM driver_table " \
                 f"WHERE driver_id = {driver_id}"
         self.cursor.execute(query)
@@ -189,7 +190,7 @@ class Helper:
         return driver_detail
 
     @log_error_db
-    def get_password_user(self,user_name):
+    def get_password_user(self, user_name):
         query = "SELECT password FROM user_table " \
                 f"WHERE user_name = '{user_name}';"
         self.cursor.execute(query)
@@ -197,7 +198,7 @@ class Helper:
         return password
 
     @log_error_db
-    def get_user_id(self,user_name):
+    def get_user_id(self, user_name):
         query = "SELECT user_id FROM user_table " \
                 f"WHERE user_name = '{user_name}'"
         self.cursor.execute(query)
