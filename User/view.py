@@ -49,9 +49,7 @@ def search_driver():
 @verify_token
 def get_driver_location():
     driver_id = request.form["driver_id"]
-    driver_location = controller.get_driver_location(driver_id)
-    longitude = float(driver_location[0])
-    latitude = float(driver_location[1])
+    longitude, latitude = controller.get_driver_location(driver_id)
     position = {'longitude':longitude, 'latitude':latitude}
     return jsonify(position)
 

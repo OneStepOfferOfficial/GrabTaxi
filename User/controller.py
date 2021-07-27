@@ -3,29 +3,9 @@ from Dispatch import view as dispatch_service
 from Common.enum import *
 from Common.util import *
 
-# def check_user_status():
-#     # try:
-#     #     user_id = request.cookies.get('user_id')
-#     #     if user_id in session:
-#     #         return True, request.cookies.get('user_name')
-#     #     raise Exception("User is not logged in")
-#     # except :
-#     #     return False,None
-#     try:
-#         token = request.headers["z-token"]
-#         data = verify_token_and_return_data(token)
-#         user_name = data["user_name"]
-#         return True if user_name else False, user_name
-#     except KeyError:
-#         return False, None
-
 def login(user_name,password):
     if dispatch_service.verify_password_user(user_name,password):
         user_id = dispatch_service.get_user_id(user_name)
-        # session[user_id] = True
-        # resp = make_response(redirect(url_for('booking')))
-        # resp.set_cookie('user_id',str(user_id))
-        # resp.set_cookie('user_name',user_name)
         token = create_token(user_id=user_id)
         return token
     else:
@@ -46,8 +26,8 @@ def get_driver_id(trip_id):
     return driver_id
 
 def get_driver_location(driver_id):
-    driver_location = dispatch_service.get_driver_location(driver_id)
-    return driver_location
+    return dispatch_service.get_driver_location(driver_id)
+
 
 def get_driver_detail(driver_id):
     driver_detail = dispatch_service.get_driver_detail(driver_id)

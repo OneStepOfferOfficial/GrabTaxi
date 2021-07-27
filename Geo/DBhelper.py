@@ -110,7 +110,9 @@ class Helper:
         query = "SELECT longitude, latitude FROM driver_location_table " \
                 f"WHERE driver_id = {driver_id}"
         self.cursor.execute(query)
-        driver_location = self.cursor.fetchall()[0]
-        return driver_location
+        location = self.cursor.fetchall()[0]
+        longitude = float(location[0])
+        latitude = float(location[1])
+        return longitude, latitude
 
 

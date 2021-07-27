@@ -47,17 +47,18 @@ function startTimer(host,port,driver_id){
     window.latitude = document.createElement("p"); 
     window.latitude.innerText = "Updating the latitude of driver location";
     document.body.appendChild(window.latitude);
-    var timer = window.setInterval(get_driver_location,1000)
+    var timer = window.setInterval(get_driver_location,1000);
     var xhr = new XMLHttpRequest();
     var url = 'http://'+window.location.host+'/get_driver_detail';
     xhr.open('post', url, true);
     xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-    xhr.setRequestHeader('token', localStorage.getItem("token"))
+    xhr.setRequestHeader('token', localStorage.getItem("token"));
     xhr.send("driver_id="+driver_id);
     xhr.onreadystatechange = function () {
         if (xhr.readyState == 4) {
             if (xhr.responseText == "expired"){
-                window.alert("you need to login again")
+                clearTimeout(timer);
+                window.alert("you need to login again");
                 window.location.replace('http://'+window.location.host+'/login');
             }
             var data = JSON.parse(xhr.response);

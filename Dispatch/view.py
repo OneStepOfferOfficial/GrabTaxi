@@ -11,8 +11,7 @@ def get_driver_id(trip_id):
     return driver_id
 
 def get_driver_location(driver_id):
-    driver_location = controller.get_driver_location(driver_id)
-    return driver_location
+    return controller.get_driver_location(driver_id)
 
 def get_driver_detail(driver_id):
     driver_detail = controller.get_driver_detail(driver_id)
