@@ -1,10 +1,10 @@
 from Geo import view as geo_service
-from Dispatch.DBhelper import Helper
 from Common.enum import *
 import random
 import uuid
+from Dispatch import DBhelper as DBhelper
+from Redis import controller as redis
 
-DBhelper = Helper()
 
 def insert_trip(user_id,pickup_location,dropoff_location):
     trip_id = str(uuid.uuid1()).replace('-', '')
@@ -57,8 +57,7 @@ def get_trip_detail(trip_id):
     return trip_detail
 
 def get_driver_location(driver_id):
-    driver_location = geo_service.get_driver_location(driver_id)
-    return driver_location
+    return redis.get_driver_location(driver_id)
 
 def get_driver_detail(driver_id):
     driver_detail = DBhelper.get_driver_detail(driver_id)
@@ -71,7 +70,8 @@ def update_trip_status(trip_id,status):
         DBhelper.update_trip_status(trip_id,status)
         driver_id = DBhelper.get_driver_id(trip_id)
         DBhelper.update_driver_status(driver_id,Driver_status.Available)
-
+        redis.delete_driver_location(driver_id)
+        
 def verify_password_user(user_name,password):
     real_password = DBhelper.get_password_user(user_name)
     if real_password == password:
@@ -88,3 +88,4 @@ def sign_up_user(user_name,password,phone_number):
 
 def sign_up_driver(driver_name,password,phone_number):
     DBhelper.insert_driver(driver_name,password,phone_number)
+

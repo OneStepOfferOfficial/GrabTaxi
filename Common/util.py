@@ -1,3 +1,7 @@
+from itsdangerous import TimedJSONWebSignatureSerializer as Serializer
+from Common.config import *
+from itsdangerous import BadSignature, SignatureExpired
+
 def swap(l,index1,index2):
         '''
         swap the two given index element in the list and return the index2
@@ -41,3 +45,21 @@ def find_zone(long,lati):
     if long < 0 or lati < 0 or long > 90 or lati > 90:
         return -1
     return  (long)//10 + (lati)//10*10
+
+def create_token(user_id,expiration=EXPIRATION):
+    s = Serializer(SECRET_KEY, expires_in=expiration)
+    token_content = {}
+    token_content["user_id"] = user_id
+    return s.dumps(token_content)
+
+def verify_token_and_return_data(token):
+    s = Serializer(SECRET_KEY)
+    try:
+        data = s.loads(token)
+        return data
+    except SignatureExpired:
+        print('token is expired')
+        return None
+    except BadSignature:
+        return None
+

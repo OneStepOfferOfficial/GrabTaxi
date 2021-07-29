@@ -1,8 +1,10 @@
 from Geo.DBhelper import Helper
 from Common.util import *
 from Common.enum import *
+from Geo import DBhelper as DBhelper
+from Filter import controller as filter
+from Redis import controller as redis
 
-DBhelper = Helper()
 
 def get_search_zones(long,lati,distance,origin_zone):
     '''
@@ -53,5 +55,18 @@ def find_nearest_drivers(pickup_location,distance=4):
     return sorted_drivers
 
 def get_driver_location(driver_id):
-    driver_locaiton = DBhelper.get_driver_location(driver_id)
-    return driver_locaiton
+    return DBhelper.get_driver_location(driver_id)
+
+def update_driver_location(driver_id,longitude,latitude, with_filter=True):
+    if with_filter == False:
+        DBhelper.update_driver_location(driver_id, longitude, latitude)
+        return
+    pre_longitude, pre_latitude = filter.get_driver_location(driver_id)
+    if (pre_latitude == None and pre_latitude == None) or (pre_longitude != longitude or pre_latitude != latitude):
+        DBhelper.update_driver_location(driver_id, longitude, latitude)
+        filter.update_driver_location(driver_id,longitude,latitude)
+        longitude_in_redis, latitude_in_redis = redis.get_driver_location_without_database(driver_id)
+        if longitude_in_redis != None:
+            redis.update_driver_location(driver_id,longitude,latitude)
+
+

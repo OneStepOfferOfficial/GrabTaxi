@@ -3,12 +3,16 @@
 
 <h>Hi, your trip id is {{trip_id}}</h>
 
-<body>
+<body onload="check_token(true)">
     <br>
     <button id="button" onclick="search_driver('{{host}}','{{port}}','{{trip_id}}')">
-        Confirm
+        View detail
     </button>
     <br>
-    <script type="text/javascript" src="../static/update_trip_status.js"></script>
 </body>
+<script type="text/javascript" src="../static/update_trip_status.js"></script>
+<script type="text/javascript" src="../static/check_token.js"></script>
+<script> 
+    localStorage.setItem("trip_id",'{{trip_id}}');
+</script>
 {% endblock %}

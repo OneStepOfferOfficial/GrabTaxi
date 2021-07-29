@@ -1,6 +1,7 @@
 from Geo import config as config
 from Common.util import *
 import psycopg2
+from Common.decorator import *
 
 class Driver:
     def __init__(self,id,location):
@@ -24,6 +25,7 @@ class Helper:
                                   )
         self.cursor = self.connection.cursor()
 
+    @log_error_db
     def create_driver_location_table(self):
         query = "CREATE TABLE driver_location_table(" \
                 "driver_id BIGSERIAL PRIMARY KEY," \
@@ -33,6 +35,7 @@ class Helper:
         self.cursor.execute(query)
         self.connection.commit()
 
+    @log_error_db
     def insert_data_into_table(self):
         query = "COPY driver_location_table(driver_id,longitude,latitude,zone)" \
                 "FROM 'data.csv'" \
@@ -41,6 +44,7 @@ class Helper:
         self.cursor.execute(query)
         self.connection.commit()
 
+    @log_error_db
     def separate_table(self):
         # build zone tables according to the driver position
         for zone in range(100):
@@ -50,6 +54,7 @@ class Helper:
             self.cursor.execute(query)
             self.connection.commit()
 
+    @log_error_db
     def get_nearby_drivers(self,longitude, latitude, distance, search_zones):
         nearby_drivers = []
         for zone in search_zones:
@@ -65,6 +70,7 @@ class Helper:
                 nearby_drivers.append(driver)
         return nearby_drivers
 
+    @log_error_db
     def update_driver_location(self,driver_id,longitude,latitude):
         query = ("SELECT zone FROM driver_location_table "
                  f"WHERE driver_id = {driver_id} ")
@@ -99,11 +105,14 @@ class Helper:
         self.cursor.execute(query)
         self.connection.commit()
 
+    @log_error_db
     def get_driver_location(self,driver_id):
         query = "SELECT longitude, latitude FROM driver_location_table " \
                 f"WHERE driver_id = {driver_id}"
         self.cursor.execute(query)
-        driver_location = self.cursor.fetchall()[0]
-        return driver_location
+        location = self.cursor.fetchall()[0]
+        longitude = float(location[0])
+        latitude = float(location[1])
+        return longitude, latitude
 
 

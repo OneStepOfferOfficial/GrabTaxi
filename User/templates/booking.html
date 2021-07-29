@@ -1,20 +1,27 @@
 <!DOCTYPE html>
 <html>
-<body>
-<div id="datetime">
-<script type="text/javascript" src="../static/show_current_time.js"></script>
-</div>
-<form method="POST">	
-    <h2>Hi! Please make your trip <h>
-    <br></br>
-	<p>longitude of pick-up position:<input type="text" name="long_of_pickup"></p>
-    <p>latitude of pick-up position:    
-        <input type="text" name="lati_of_pickup"></p>
-	<p>longitude of drop-off position:
-        <input type="text" name="long_of_dropoff"></p>
-    <p>latitude of drop-off position:    
-        <input type="text" name="lati_of_dropoff"></p>
-    <p><input type="submit" value="Confirm"></p>
-</form>
+<body onload="check_token()">
+    <div id="datetime">
+    <script type="text/javascript" src="../static/show_current_time.js"></script>
+    </div>
+    <form method="POST">	
+        <h2>Hi! Please make your trip <h>
+        <br></br>
+    	<p>longitude of pick-up position:
+            <input type="text" name="long_of_pickup"></p>
+        <p>latitude of pick-up position:    
+            <input type="text" name="lati_of_pickup"></p>
+    	<p>longitude of drop-off position:
+            <input type="text" name="long_of_dropoff"></p>
+        <p>latitude of drop-off position:    
+            <input type="text" name="lati_of_dropoff"></p>
+        <input type="hidden" id="token" name="token" value="1">
+        <p><input type="submit" value="Upload my trip"></p>
+    </form>
+    <script type="text/javascript" src="../static/check_token.js">
+    </script>
+    <script>
+        document.getElementById("token").value = localStorage.getItem("token");;
+    </script>
 </body>
 </html>
